@@ -1,0 +1,24 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <title>Ding demo</title> 
+  <meta name="author" content="Davide Casali - intenseminimalism.com" />
+  <link rel="stylesheet" href="style.css" media="all" /> 
+  
+  <script src="ding.js"></script>
+  <script>
+    //var game = new Ding(["#gee", "#wee"]);
+    var game = new Ding({
+      "#gee": 1,
+      "#wee": 5
+    });
+  </script>
+</head> 
+<body>
+  <div style="height: 200px"></div>
+  <a href="http://google.com/?s=yeah" id="gee">Google Yeah</a> - 
+  <a href="http://google.com/?s=whoa" id="wee">Google Whoa</a> - 
+  <a href="http://google.com" id="none">Google Boo</a>
+</body>
+</html>
