@@ -30,6 +30,7 @@ Ding.prototype = {
   
   sprite: null,
   loop: null,
+  coins: 0,
   
   init: function(param) {
     /****************************************************************************************************
@@ -87,7 +88,12 @@ Ding.prototype = {
       // ****** Position
       var href = e.currentTarget.href;
       self.sprite.style.display = "block";
+      self.sprite.style.opacity = 1.0;
       self.positionToCSS(e.currentTarget.offsetTop - self.sprite.offsetHeight, e.currentTarget.offsetLeft, self.sprite);
+      
+      // Coins
+      self.coins++;
+      if (console.log) console.log("Coins taken here: " + self.coins);
       
       // Animate
       self.dingAnimation(self.sprite, e.currentTarget.offsetTop - 200);
@@ -105,6 +111,7 @@ Ding.prototype = {
     }
   },
   
+  
   dingAnimation: function(sprite, roof) {
     /****************************************************************************************************
      * Ding! From an object
@@ -112,8 +119,16 @@ Ding.prototype = {
     var self = this;
     
     if (sprite.offsetTop > roof) {
+      // First, move...
       sprite.style.top = (parseInt(sprite.style.top) * 0.850) + "px";
-      this.loop = setTimeout(function() { self.dingAnimation(sprite, roof) }, 1);      
+      this.loop = setTimeout(function() { self.dingAnimation(sprite, roof) }, 1);
+    } /*else if (sprite.offsetTop <= roof + 50) {
+      // Second, disappear
+      sprite.style.top = (parseInt(sprite.style.top) * 1.095) + "px";
+      this.loop = setTimeout(function() { self.dingAnimation(sprite, roof, 1) }, 10);
+    } */else {
+      // Third, remove
+      this.loop = setTimeout(function() { sprite.style.display = "none"; }, 200);
     }
   },
   
