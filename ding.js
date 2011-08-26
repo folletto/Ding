@@ -96,7 +96,9 @@ Ding.prototype = {
       if (console.log) console.log("Coins taken here: " + self.coins);
       
       // Animate
-      self.dingAnimation(self.sprite, e.currentTarget.offsetTop - 200);
+      //self.dingAnimation(self.sprite, e.currentTarget.offsetTop - 200);
+      var roof = e.currentTarget.offsetTop - 250;
+      self.animate(function() { return self.dingAnimation(self.sprite, roof); });
       
       // This is separated to avoid locks
       currentCount++;
@@ -111,6 +113,28 @@ Ding.prototype = {
     }
   },
   
+  animate: function(fx) {
+    /****************************************************************************************************
+     * Animation primer.
+     * The function must return False when the animation has to end, true oterwise.
+     *
+     * https://developer.mozilla.org/en/DOM/window.mozRequestAnimationFrame
+     * http://www.goat1000.com/2011/04/07/mozrequestanimationframe-and-webkitrequestanimationframe.html
+     */
+    var aloop;
+    var requestAnimationFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
+    
+    if (requestAnimationFrame) {
+      aloop = function animationFrameCallback() { if (fx()) requestAnimationFrame(aloop); }
+    } else {
+      aloop = function animationTimedCallback() { if (fx()) setTimeout(aloop, 1000 / 60); }
+    }
+    
+    // Run!
+    aloop();
+    
+    return aloop;
+  },
   
   dingAnimation: function(sprite, roof) {
     /****************************************************************************************************
@@ -121,7 +145,7 @@ Ding.prototype = {
     if (sprite.offsetTop > roof) {
       // First, move...
       sprite.style.top = (parseInt(sprite.style.top) * 0.850) + "px";
-      this.loop = setTimeout(function() { self.dingAnimation(sprite, roof) }, 1);
+      //this.loop = setTimeout(function() { self.dingAnimation(sprite, roof) }, 1);
     } /*else if (sprite.offsetTop <= roof + 50) {
       // Second, disappear
       sprite.style.top = (parseInt(sprite.style.top) * 1.095) + "px";
@@ -129,7 +153,10 @@ Ding.prototype = {
     } */else {
       // Third, remove
       this.loop = setTimeout(function() { sprite.style.display = "none"; }, 200);
+      return false;
     }
+    
+    return true;
   },
   
   // UTILITY FUNCTIONS
