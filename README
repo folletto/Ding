@@ -1,0 +1,23 @@
+Project Ding
+Simple gamification technique gimmick "coin" engine
+http://intenseminimalism.com/
+Copyright (C) 2011, Davide Casali
+Licensed under GPLv2 Opensource License.
+
+
+
+WHAT IS DING
+============
+
+Ding is a tiny javascript that create the HTML equivalent of the coin box in Super Mario, but instead of hitting it with the head of Mario, you click. When you reach the last click, the action triggers.
+
+
+CHECKLIST
+=========
+
+. Make it work properly
+. Test properly on multiple browser
+. Add some kind of game logic hooks
+. Add some kind of CSS sprite extension hooks
+. Add API backend hooks
+. Add cookie to keep track of coins
