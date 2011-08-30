@@ -64,7 +64,7 @@ Ding.prototype = {
      * Precache assets
      */
     this.sound = {
-      'default': new Audio("coin.wav")
+      'ding': new Audio("coin.wav")
     };
   },
   
@@ -108,7 +108,7 @@ Ding.prototype = {
       
       // Animate
       //self.dingAnimation(self.sprite, e.currentTarget.offsetTop - 200);
-      self.sound.default.play();
+      self.sound.ding.play();
       var roof = e.currentTarget.offsetTop - 250;
       self.animate(function() { return self.dingAnimation(self.sprite, roof); });
       
