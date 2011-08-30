@@ -39,7 +39,7 @@ Ding.prototype = {
      */
     var self = this;
     document.addEventListener("DOMContentLoaded", function() {
-      document.removeEventListener( "DOMContentLoaded", arguments.callee, false );
+      document.removeEventListener( "DOMContentLoaded", arguments.callee, false);
       
       // ****** Prepare
       self.precache();
@@ -56,7 +56,7 @@ Ding.prototype = {
         }
       }
       
-    }, false );
+    }, false);
   },
   
   precache: function() {
@@ -85,7 +85,7 @@ Ding.prototype = {
     /****************************************************************************************************
      * Make a DOM object dingable.
      */
-    obj.addEventListener("click", this.listenerFactoryDingable(count));
+    obj.addEventListener("click", this.listenerFactoryDingable(count), false);
   },
   
   listenerFactoryDingable: function(count) {
@@ -104,7 +104,7 @@ Ding.prototype = {
       
       // Coins
       self.coins++;
-      if (console.log) console.log("Coins taken up until now: " + self.coins);
+      if (typeof console !== 'undefined') console.log("Coins taken up until now: " + self.coins);
       
       // Animate
       //self.dingAnimation(self.sprite, e.currentTarget.offsetTop - 200);
