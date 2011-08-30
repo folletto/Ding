@@ -29,6 +29,7 @@ var Ding = function() { this.init.apply(this, arguments); } // Prototype-like Co
 Ding.prototype = {
   
   sprite: null,
+  sound: {},
   loop: null,
   coins: 0,
   
@@ -40,7 +41,8 @@ Ding.prototype = {
     document.addEventListener("DOMContentLoaded", function() {
       document.removeEventListener( "DOMContentLoaded", arguments.callee, false );
       
-      // ****** Attach sprite
+      // ****** Prepare
+      self.precache();
       self.makeSprite();
       
       // ****** Attach event listeneres
@@ -55,6 +57,15 @@ Ding.prototype = {
       }
       
     }, false );
+  },
+  
+  precache: function() {
+    /****************************************************************************************************
+     * Precache assets
+     */
+    this.sound = {
+      'default': new Audio("coin.wav")
+    };
   },
   
   makeSprite: function() {
@@ -93,10 +104,11 @@ Ding.prototype = {
       
       // Coins
       self.coins++;
-      if (console.log) console.log("Coins taken here: " + self.coins);
+      if (console.log) console.log("Coins taken up until now: " + self.coins);
       
       // Animate
       //self.dingAnimation(self.sprite, e.currentTarget.offsetTop - 200);
+      self.sound.default.play();
       var roof = e.currentTarget.offsetTop - 250;
       self.animate(function() { return self.dingAnimation(self.sprite, roof); });
       
