@@ -34,8 +34,6 @@ Ding.prototype = {
   sprite: null,
   sound: {},
   loop: null,
-  coins: 0,
-  callback: null,
   
   init: function(param) {
     /****************************************************************************************************
