@@ -37,7 +37,7 @@ Ding.prototype = {
   coins: 0,
   callback: null,
   
-  init: function(param, callback) {
+  init: function(param) {
     /****************************************************************************************************
      * Wait for the DOM to be ready and attach to it.
      */
@@ -55,11 +55,6 @@ Ding.prototype = {
         for (i in param) {
           self.getElementBySelector(i).addEventListener("click", self.listenerFactoryDingable(i, param[i]), false);
         }
-      }
-      
-      // ****** Callback function (called on each click)
-      if (callback instanceof Function) {
-        self.callback = callback;
       }
       
     }, false);
@@ -98,8 +93,10 @@ Ding.prototype = {
       // ****** Resets
       clearTimeout(self.loop);
       
-      // ****** Callback
-      if (self.callback) self.callback(selector, countdown - 1);
+      // ****** Extensions
+      for (x in Ding.x) {
+        Ding.x[x](selector, countdown - 1);
+      }
       
       // ****** Animate: initialization
       self.sprite.style.display = "block";
@@ -204,3 +201,8 @@ Ding.prototype = {
     else sprite.style.right = -y + "px";
   }
 }
+
+/****************************************************************************************************
+ * Extensions Namespace
+ */
+Ding.x = {};

@@ -8,16 +8,22 @@
   
   <script src="ding.js"></script>
   <script>
-    //var game = new Ding(["#gee", "#wee"]);
     var game = new Ding({
       "#gee": 1,
       "#wee": 5,
       "#boom": 200,
       "#longest": 400,
       "#hashhash": 20
-      },
-      function(selector, countdown) { console.log("Selected!!! -> " + selector + "(" + countdown + ")"); }
-    );
+    });
+    
+    Ding.x.counter = function(selector, countdown) {
+      console.log("-> " + selector + "(" + countdown + ")");
+    }
+    
+    Ding.x.trap = function(selector, countdown) {
+      console.log("   Yes, this is another!");
+    }
+    
   </script>
 </head> 
 <body>
