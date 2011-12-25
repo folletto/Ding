@@ -105,9 +105,7 @@ Ding.prototype = {
       
       // ****** Extensions
       for (x in Ding.x) {
-        var out = null;
-        out = Ding.x[x](selector, countdown);
-        if (out) countdown = out;
+        countdown = Ding.x[x](selector, countdown) || countdown; // Replace the countdown value if any is returned
       }
       
       // ****** Trigger href action when zero.
