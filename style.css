@@ -10,10 +10,10 @@
 
 /****** Coin */
 .ding-sprite {
-  background: transparent url(coin.gif) no-repeat;
+  background: transparent url(coin.gif) no-repeat center center;
   display: block;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
 }
 
 

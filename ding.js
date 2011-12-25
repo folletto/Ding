@@ -53,7 +53,7 @@ Ding.prototype = {
       // ****** Attach event listeneres
       if (param instanceof Object) {
         for (i in param) {
-          self.makeDingable(self.getElementBySelector(i), i, param[i]);
+          self.getElementBySelector(i).addEventListener("click", self.listenerFactoryDingable(i, param[i]), false);
         }
       }
       
@@ -82,14 +82,9 @@ Ding.prototype = {
     this.sprite.setAttribute('class', 'ding-sprite');
     this.sprite.style.position = "absolute";
     this.sprite.style.display = "none";
+    this.sprite.style.zIndex = "200";
     
     document.body.appendChild(this.sprite);
-  },
-  makeDingable: function(obj, selector, count) {
-    /****************************************************************************************************
-     * Make a DOM object dingable.
-     */
-    obj.addEventListener("click", this.listenerFactoryDingable(selector, count), false);
   },
   
   listenerFactoryDingable: function(selector, count) {
@@ -100,25 +95,26 @@ Ding.prototype = {
     var countdown = count;
     
     return function clickedDingable(e) {
-      // ****** Coins
+      // ****** Resets
+      clearTimeout(self.loop);
+      
+      // ****** Callback
       if (self.callback) self.callback(selector, countdown - 1);
       
-      // ****** Position
-      var href = e.currentTarget.href;
+      // ****** Animate: initialization
       self.sprite.style.display = "block";
       self.sprite.style.opacity = 1.0;
-      self.positionToCSS(e.currentTarget.offsetTop - self.sprite.offsetHeight, e.currentTarget.offsetLeft, self.sprite);
-      //console.log(e.currentTarget.offsetTop); /* DEBUG */
+      self.positionToCSS(e.currentTarget.offsetTop - self.sprite.offsetHeight, e.currentTarget.offsetLeft + (e.currentTarget.offsetWidth / 2) - (self.sprite.offsetWidth / 2), self.sprite);
       
-      // Animate
-      //self.dingAnimation(self.sprite, e.currentTarget.offsetTop - 200);
+      // ****** Animate: play
       self.sound.ding.play();
-      var roof = e.currentTarget.offsetTop - 250;
-      self.animate(function() { return self.dingAnimation(self.sprite, roof); });
+      var roof = e.currentTarget.offsetTop - 200;
+      self.animate(function(t) { return self.dingAnimation(t, self.sprite, roof); });
       
-      // Countdown
+      // ****** Countdown and trigger href action when zero.
       countdown--;
       if (countdown <= 0) {
+        var href = e.currentTarget.href;
         setTimeout(function() { window.location = href; }, 400);
       }
       
@@ -129,46 +125,29 @@ Ding.prototype = {
     }
   },
   
-  animate: function(fx) {
-    /****************************************************************************************************
-     * Animation primer.
-     * The function must return False when the animation has to end, true oterwise.
-     *
-     * https://developer.mozilla.org/en/DOM/window.mozRequestAnimationFrame
-     * http://www.goat1000.com/2011/04/07/mozrequestanimationframe-and-webkitrequestanimationframe.html
-     */
-    var aloop;
-    var requestAnimationFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
-    
-    if (requestAnimationFrame) {
-      aloop = function animationFrameCallback() { if (fx()) requestAnimationFrame(aloop); }
-    } else {
-      aloop = function animationTimedCallback() { if (fx()) setTimeout(aloop, 1000 / 60); }
-    }
-    
-    // Run!
-    aloop();
-    
-    return aloop;
-  },
-  
-  dingAnimation: function(sprite, roof) {
+  dingAnimation: function(t, sprite, roof) {
     /****************************************************************************************************
      * Ding! From an object
+     * 
      */
-    var self = this;
     
-    if (sprite.offsetTop > roof) {
+    if (t < 1) {
+      // Zero, tiny wait...
+      // This is required to force the first showing of the element at the real starting point
+      
+    } else if (sprite.offsetTop > roof) {
       // First, move...
-      sprite.style.top = (parseInt(sprite.style.top) * 0.850) + "px";
-      //console.log(sprite.style.top); /* DEBUG */
-      //this.loop = setTimeout(function() { self.dingAnimation(sprite, roof) }, 1);
-    } /*else if (sprite.offsetTop <= roof + 50) {
-      // Second, disappear
-      sprite.style.top = (parseInt(sprite.style.top) * 1.095) + "px";
-      this.loop = setTimeout(function() { self.dingAnimation(sprite, roof, 1) }, 10);
-    } */else {
-      // Third, remove
+      sprite.style.top = (sprite.offsetTop - (sprite.offsetTop - roof) / 5) + "px";
+      
+    } else if (t < 500) {
+      // Second, pause...
+      
+    } else if (sprite.style.opacity > 0) {
+      // Third, disappear...
+      sprite.style.opacity = sprite.style.opacity - 0.201; // the 0.001 is required to avoid float issues
+      
+    } else {
+      // Fourth, remove...
       this.loop = setTimeout(function() { sprite.style.display = "none"; }, 200);
       return false;
     }
@@ -177,6 +156,30 @@ Ding.prototype = {
   },
   
   // UTILITY FUNCTIONS
+  animate: function(fx) {
+    /****************************************************************************************************
+     * Animation primer.
+     * The callback function must return false when the animation has to end, true oterwise.
+     * The function inject a time variable in milliseconds.
+     *
+     * https://developer.mozilla.org/en/DOM/window.mozRequestAnimationFrame
+     * http://www.goat1000.com/2011/04/07/mozrequestanimationframe-and-webkitrequestanimationframe.html
+     */
+    var aloop;
+    var tstart = +new Date();
+    var requestAnimationFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
+    
+    if (requestAnimationFrame) {
+      aloop = function animationFrameCallback() { if (fx((new Date()) - tstart)) requestAnimationFrame(aloop); }
+    } else {
+      aloop = function animationTimedCallback() { if (fx((new Date()) - tstart)) setTimeout(aloop, 1000 / 60); }
+    }
+    
+    // Run!
+    aloop();
+    
+    return aloop;
+  },
   getElementBySelector: function(selector) {
     /****************************************************************************************************
      * Get a DOM object from a specific selector.

@@ -12,7 +12,9 @@
     var game = new Ding({
       "#gee": 1,
       "#wee": 5,
-      "#boom": 200
+      "#boom": 200,
+      "#longest": 400,
+      "#hashhash": 20
       },
       function(selector, countdown) { console.log("Selected!!! -> " + selector + "(" + countdown + ")"); }
     );
@@ -30,11 +32,15 @@
       that trigger a Super Mario&trade; - like visual interaction.
     </p>
   
-    <div style="height: 300px"></div>
-    <a href="http://google.com/?s=yeah" id="gee">Google 1x</a> - 
+    <div style="height: 200px"></div>
+    
     <a href="http://google.com/?s=whoa" id="wee">Google 5x</a> - 
+    <a href="http://google.com/?s=yeah" id="gee">Google 1x</a> - 
     <a href="http://google.com/?s=whoa" id="boom">Google BOOM!</a> - 
-    <a href="http://google.com" id="none">Google GO!</a>
+    <a href="http://google.com" id="none">Google GO!</a> - 
+    <a href="http://google.com" id="longest">Google link is long like the longcat that's long indeed!</a>
+    <br/>
+    <a href="#" id="hashhash">Hash hash!</a>
   </div>
 </body>
 </html>
