@@ -1,4 +1,8 @@
-
+/*
+ * Ding
+ * latest update: 2011 12 25
+ *
+ */
 
 
 
@@ -9,3 +13,42 @@
   width: 80px;
   height: 80px;
 }
+
+
+/**************************************************************************************************** GENERAL */
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #000000;
+}
+
+a {
+  color: #2299aa;
+}
+
+#all {
+  width: 400px;
+  margin: 20px auto;
+  overflow: auto;
+}
+
+/**************************************************************************************************** HEADER */
+h1 {
+  border-top: 4px solid #000000;
+  
+  font-size: 40px;
+  font-weight: 100;
+  
+  padding: 20px 0;
+}
+
+h1 small {
+  display: block;
+  
+  font-weight: normal;
+  font-size: 14px;
+  
+  text-transform: uppercase;
+  padding: 5px 0;
+}
+
