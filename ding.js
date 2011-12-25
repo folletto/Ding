@@ -1,25 +1,28 @@
 /*
  * Ding
- * last update: 2011-08-26
+ * last update: 2011-12-25
  * 
  * Copyright (C) 2011 by Davide S. Casali <folletto AT gmail DOT com>
  * 
  *
  * Usage:
- *   Define the CSS for 'ding-sprite'.
- *   Init with the position of the dripping point:
+ *   1. Define the CSS for 'ding-sprite'.
+ *   2. Init with an hash of items (by CSS id or, with jQuery, selector) to be "dingable", 
+ *      and the number of dings:
  *
- *     Ding.init([
- *       "#id",
- *       "#id2"
- *     ]);
+ *       Ding.init({
+ *         "#id": 1,
+ *         "#id2": 5
+ *       });
  * 
- *   Or:
+ *   Optionally, you can specify a function as a callback triggered on each click:
  *
- *     Ding.init({
- *       "#id": 1,
- *       "#id2": 5
- *     });
+ *       Ding.init({
+ *           "#id": 1,
+ *           "#id2": 5
+ *          }, 
+ *          function(selector, countdown) { ... }
+ *       );
  * 
  */
 
@@ -32,12 +35,14 @@ Ding.prototype = {
   sound: {},
   loop: null,
   coins: 0,
+  callback: null,
   
-  init: function(param) {
+  init: function(param, callback) {
     /****************************************************************************************************
      * Wait for the DOM to be ready and attach to it.
      */
     var self = this;
+    
     document.addEventListener("DOMContentLoaded", function() {
       document.removeEventListener( "DOMContentLoaded", arguments.callee, false);
       
@@ -46,14 +51,15 @@ Ding.prototype = {
       self.makeSprite();
       
       // ****** Attach event listeneres
-      if (param instanceof Array) {
+      if (param instanceof Object) {
         for (i in param) {
-          self.makeDingable(self.getElementBySelector(param[i]));
+          self.makeDingable(self.getElementBySelector(i), i, param[i]);
         }
-      } else if (param instanceof Object) {
-        for (i in param) {
-          self.makeDingable(self.getElementBySelector(i), param[i]);
-        }
+      }
+      
+      // ****** Callback function (called on each click)
+      if (callback instanceof Function) {
+        self.callback = callback;
       }
       
     }, false);
@@ -67,7 +73,6 @@ Ding.prototype = {
       'ding': new Audio("coin.wav")
     };
   },
-  
   makeSprite: function() {
     /****************************************************************************************************
      * Make the sprite.
@@ -80,31 +85,30 @@ Ding.prototype = {
     
     document.body.appendChild(this.sprite);
   },
-  
-  makeDingable: function(obj, count) {
+  makeDingable: function(obj, selector, count) {
     /****************************************************************************************************
      * Make a DOM object dingable.
      */
-    obj.addEventListener("click", this.listenerFactoryDingable(count), false);
+    obj.addEventListener("click", this.listenerFactoryDingable(selector, count), false);
   },
   
-  listenerFactoryDingable: function(count) {
+  listenerFactoryDingable: function(selector, count) {
     /****************************************************************************************************
      * Make a DOM object dingable.
      */
     var self = this;
-    var currentCount = 0;
+    var countdown = count;
     
-    return function(e) {
+    return function clickedDingable(e) {
+      // ****** Coins
+      if (self.callback) self.callback(selector, countdown - 1);
+      
       // ****** Position
       var href = e.currentTarget.href;
       self.sprite.style.display = "block";
       self.sprite.style.opacity = 1.0;
       self.positionToCSS(e.currentTarget.offsetTop - self.sprite.offsetHeight, e.currentTarget.offsetLeft, self.sprite);
-      
-      // Coins
-      self.coins++;
-      if (typeof console !== 'undefined') console.log("Coins taken up until now: " + self.coins);
+      //console.log(e.currentTarget.offsetTop); /* DEBUG */
       
       // Animate
       //self.dingAnimation(self.sprite, e.currentTarget.offsetTop - 200);
@@ -112,15 +116,15 @@ Ding.prototype = {
       var roof = e.currentTarget.offsetTop - 250;
       self.animate(function() { return self.dingAnimation(self.sprite, roof); });
       
-      // This is separated to avoid locks
-      currentCount++;
-      if (currentCount >= count) {
+      // Countdown
+      countdown--;
+      if (countdown <= 0) {
         setTimeout(function() { window.location = href; }, 400);
       }
       
-      
       // ****** Prevent click until animation ends
-      if (e &&e.preventDefault) e.preventDefault();
+      // * Tested on: Firefox 3.5+, Chrome 16+, Safari 5.0+, Opera 10
+      if (e && e.preventDefault) e.preventDefault();
       else if (window.event && window.event.returnValue) window.eventReturnValue = false;
     }
   },
@@ -157,6 +161,7 @@ Ding.prototype = {
     if (sprite.offsetTop > roof) {
       // First, move...
       sprite.style.top = (parseInt(sprite.style.top) * 0.850) + "px";
+      //console.log(sprite.style.top); /* DEBUG */
       //this.loop = setTimeout(function() { self.dingAnimation(sprite, roof) }, 1);
     } /*else if (sprite.offsetTop <= roof + 50) {
       // Second, disappear

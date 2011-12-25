@@ -1,9 +1,11 @@
 /*
  * Ding
- * latest update: 2011 12 25
+ * last update: 2011-12-25
+ * 
+ * Copyright (C) 2011 by Davide S. Casali <folletto AT gmail DOT com>
+ * 
  *
  */
-
 
 
 /****** Coin */
@@ -24,6 +26,10 @@ body {
 
 a {
   color: #2299aa;
+}
+
+a:hover {
+  background-color: #aaefff;
 }
 
 #all {
