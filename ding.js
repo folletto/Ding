@@ -15,14 +15,12 @@
  *         "#id2": 5
  *       });
  * 
- *   Optionally, you can specify a function as a callback triggered on each click:
+ *   You can also specify extension, receiving the clicked selector name and the countdown
+ *   as parameters. Each extension is specified in this way:
  *
- *       Ding.init({
- *           "#id": 1,
- *           "#id2": 5
- *          }, 
- *          function(selector, countdown) { ... }
- *       );
+ *       Ding.x.extensionName = function(selector, countdown) {
+ *         // do your stuff here
+ *       }
  * 
  */
 
