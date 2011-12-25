@@ -20,7 +20,10 @@
  *
  *       Ding.x.extensionName = function(selector, countdown) {
  *         // do your stuff here
+ *         return 5; // optional
  *       }
+ *   
+ *   The return is optional. If used, it will replace the current counter for that selector.
  * 
  */
 
@@ -86,13 +89,9 @@ Ding.prototype = {
     var countdown = count;
     
     return function clickedDingable(e) {
-      // ****** Resets
+      // ****** Init
+      countdown--;
       clearTimeout(self.loop);
-      
-      // ****** Extensions
-      for (x in Ding.x) {
-        Ding.x[x](selector, countdown - 1);
-      }
       
       // ****** Animate: initialization
       self.sprite.style.display = "block";
@@ -104,8 +103,14 @@ Ding.prototype = {
       var roof = e.currentTarget.offsetTop - 200;
       self.animate(function(t) { return self.dingAnimation(t, self.sprite, roof); });
       
-      // ****** Countdown and trigger href action when zero.
-      countdown--;
+      // ****** Extensions
+      for (x in Ding.x) {
+        var out = null;
+        out = Ding.x[x](selector, countdown);
+        if (out) countdown = out;
+      }
+      
+      // ****** Trigger href action when zero.
       if (countdown <= 0) {
         var href = e.currentTarget.href;
         setTimeout(function() { window.location = href; }, 400);
