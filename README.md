@@ -65,7 +65,7 @@ Tested on:
 
 
 TODO
-====
+----
 
 - Test properly on multiple browser
 - Add some kind of CSS sprite extension hooks
