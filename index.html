@@ -1,85 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset='utf-8'>
-
-  <title>folletto/Ding @ GitHub</title>
-
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #ffffff;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #000000;
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <title>Ding demo</title> 
+  <meta name="author" content="Davide Casali - intenseminimalism.com" />
+  <link rel="stylesheet" href="style.css" media="all" /> 
+  
+  <script src="ding.js"></script>
+  <script>
+    var game = new Ding({
+      "#gee": 1,
+      "#wee": 5,
+      "#boom": 200,
+      "#longest": 400,
+      "#hashhash": 20
+    });
+    
+    Ding.x.counter = function(selector, countdown) {
+      console.log("-> " + selector + "(" + countdown + ")");
     }
-    #container {
-      margin: 0 auto;
-      width: 700px;
+    
+    Ding.x.trap = function(selector, countdown) {
+      console.log("   Yes, this is another!");
     }
-    h1 { font-size: 3.8em; color: #000000; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #000000; }
-    h3 { text-align: center; color: #000000; }
-    a { color: #000000; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
-</head>
-
+    
+    Ding.x.boomKiller = function(selector, countdown) {
+      if (selector == "#boom" && countdown < 190 && countdown > 10) return 2;
+    }
+    
+  </script>
+</head> 
 <body>
-  <a href="https://github.com/folletto/Ding"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
-
-  <div id="container">
-
-    <div class="download">
-      <a href="https://github.com/folletto/Ding/zipball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/zip.png"></a>
-      <a href="https://github.com/folletto/Ding/tarball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>
-    </div>
-
-    <h1><a href="https://github.com/folletto/Ding">Ding</a>
-      <span class="small">by <a href="https://github.com/folletto">folletto</a></span></h1>
-
-    <div class="description">
-      A little gamification technique code gimmick
-    </div>
-
+  <div id="all">
+    <h1>
+      Ding.js
+      <small>In-page Click Game Mechanic</small>
+    </h1>
     
-
-    
-
-    
-
-    
-
-    
-      <h2>Authors</h2>
-      <p>Folletto</p>
-    
-
-    
-
-    <h2>Download</h2>
     <p>
-      You can download this project in either
-      <a href="https://github.com/folletto/Ding/zipball/master">zip</a> or
-      <a href="https://github.com/folletto/Ding/tarball/master">tar formats.
+      This library allows you to transform existing object on the page into clickable interactive elements
+      that trigger a Super Mario&trade; - like visual interaction.
     </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/folletto/Ding</pre>
-    </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="https://github.com/folletto/Ding">folletto/Ding</a>
-    </div>
-
+  
+    <div style="height: 200px"></div>
+    
+    <a href="http://google.com/?s=whoa" id="wee">Google 5x</a> - 
+    <a href="http://google.com/?s=yeah" id="gee">Google 1x</a> - 
+    <a href="http://google.com/?s=whoa" id="boom">Google BOOM!</a> - 
+    <a href="http://google.com" id="none">Google GO!</a> - 
+    <a href="http://google.com" id="longest">Google link is long like the longcat that's long indeed!</a>
+    <br/>
+    <a href="#" id="hashhash">Hash hash!</a>
   </div>
-
 </body>
 </html>
