@@ -42,30 +42,50 @@ Ding.prototype = {
      */
     var self = this;
     
-    document.addEventListener("DOMContentLoaded", function() {
-      document.removeEventListener( "DOMContentLoaded", arguments.callee, false);
-      
-      // ****** Prepare
-      self.precache();
-      self.makeSprite();
-      
-      // ****** Attach event listeneres
-      if (param instanceof Object) {
-        for (i in param) {
-          self.getElementBySelector(i).addEventListener("click", self.listenerFactoryDingable(i, param[i]), false);
+    // From jQuery
+    if (document.addEventListener) {
+      // Mozilla, Opera and webkit nightlies currently support this event
+      document.addEventListener("DOMContentLoaded", function() {
+        document.removeEventListener("DOMContentLoaded", arguments.callee, false);
+        self.parse(param);
+      }, false);
+    
+    } else if (document.attachEvent) {
+      // If IE event model is used
+      document.attachEvent("onreadystatechange", function() {
+        if ( document.readyState === "complete" ) {
+          document.detachEvent("onreadystatechange", arguments.callee);
+          self.parse(param);
         }
+      });
+    }
+  },
+  
+  parse: function(param) {
+    // ****** Prepare
+    this.precache();
+    this.makeSprite();
+    
+    // ****** Attach event listeneres
+    if (param instanceof Object) {
+      for (i in param) {
+        if (document.addEventListener)
+          this.getElementBySelector(i).addEventListener("click", this.listenerFactoryDingable(i, param[i]), false);
+        else if (document.attachEvent)
+          this.getElementBySelector(i).attachEvent("onclick", this.listenerFactoryDingable(i, param[i]), false);
       }
-      
-    }, false);
+    } 
   },
   
   precache: function() {
     /****************************************************************************************************
      * Precache assets
      */
-    this.sound = {
-      'ding': new Audio("coin.wav")
-    };
+    if (window.HTMLAudioElement) {
+      this.sound = {
+        'ding': new Audio("coin.wav")
+      };
+    }
   },
   makeSprite: function() {
     /****************************************************************************************************
@@ -92,15 +112,16 @@ Ding.prototype = {
       // ****** Init
       countdown--;
       clearTimeout(self.loop);
+      target = (event.currentTarget) ? event.currentTarget : event.srcElement;
       
       // ****** Animate: initialization
       self.sprite.style.display = "block";
       self.sprite.style.opacity = 1.0;
-      self.positionToCSS(e.currentTarget.offsetTop - self.sprite.offsetHeight, e.currentTarget.offsetLeft + (e.currentTarget.offsetWidth / 2) - (self.sprite.offsetWidth / 2), self.sprite);
+      self.positionToCSS(target.offsetTop - self.sprite.offsetHeight, target.offsetLeft + (target.offsetWidth / 2) - (self.sprite.offsetWidth / 2), self.sprite);
       
       // ****** Animate: play
-      self.sound.ding.play();
-      var roof = e.currentTarget.offsetTop - 200;
+      if (window.HTMLAudioElement) self.sound.ding.play();
+      var roof = target.offsetTop - 200;
       self.animate(function(t) { return self.dingAnimation(t, self.sprite, roof); });
       
       // ****** Extensions
@@ -118,6 +139,7 @@ Ding.prototype = {
       // * Tested on: Firefox 3.5+, Chrome 16+, Safari 5.0+, Opera 10
       if (e && e.preventDefault) e.preventDefault();
       else if (window.event && window.event.returnValue) window.eventReturnValue = false;
+      return false;
     }
   },
   

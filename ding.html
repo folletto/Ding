@@ -17,11 +17,11 @@
     });
     
     Ding.x.counter = function(selector, countdown) {
-      console.log("-> " + selector + "(" + countdown + ")");
+      if (window.console) console.log("-> " + selector + "(" + countdown + ")");
     }
     
     Ding.x.trap = function(selector, countdown) {
-      console.log("   Yes, this is another!");
+      if (window.console) console.log("   Yes, this is another!");
     }
     
     Ding.x.boomKiller = function(selector, countdown) {
