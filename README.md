@@ -77,7 +77,7 @@ TODO
 LICENSE
 -------
 
-  _Copyright (C) 2011, Davide Casali_  
+  _Copyright (C) 2011, Erin Casali_  
   _Licensed under **BSD Opensource License** (free for personal and commercial use)_
 
 
